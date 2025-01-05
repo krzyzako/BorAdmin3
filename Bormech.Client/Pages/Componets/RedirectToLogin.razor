@@ -1,0 +1,14 @@
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity?.IsAuthenticated ?? true)
+        {
+            NavManager.NavigateTo("/authentication/login");
+        }
+    }
+
+}

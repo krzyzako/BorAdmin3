@@ -1,0 +1,54 @@
+@page "/authentication/login"
+@layout LoginLayout
+
+<EditForm Model="@User" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField Label="First name" HelperText="Max. 8 characters"
+                                  @bind-Value="User.Email" For="@(() => User.Email)"/>
+                    <MudTextField Label="Email" Class="mt-3"
+                                  @bind-Value="User.Password" For="@(() => User.Password)"/>
+
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                               Class="ml-auto">Login
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Fill out the form correctly to see the success message.
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    readonly Login User = new();
+    bool success;
+
+    public async Task OnValidSubmit()
+    {
+        Console.WriteLine("Login");
+        var result = await accountService.SingInAsync(User);
+        if (result.Flag)
+        {
+            var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
+            await customAuthStateProvider.UpdateAuthenticationState(new UserSession { Token = result.Token, RefreshToken = result.RefreshToken });
+            NavManager.NavigateTo("/", true);
+        }
+        else
+        {
+            success = result.Flag;
+        }
+
+        StateHasChanged();
+    }
+
+}

@@ -1,0 +1,19 @@
+﻿@page "/"
+@inject ISnackbar Snackbar
+<PageTitle>Home</PageTitle>
+
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => Snackbar.Add("Simple Snackbar"))">
+            Open Snackbar
+        </MudButton>
+    </Authorized>
+</AuthorizeView>
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@code
+{
+
+}

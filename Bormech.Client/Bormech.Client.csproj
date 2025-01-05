@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Blazored.LocalStorage" Version="4.4.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.7" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
+        <PackageReference Include="MudBlazor" Version="7.15.0"/>
+        <PackageReference Include="MudBlazor.ThemeManager" Version="2.1.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Layout\EmptyLayout.css">
+            <DependentUpon>EmptyLayout.razor</DependentUpon>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Theme\"/>
+    </ItemGroup>
+
+    <!--    <ItemGroup>-->
+    <!--      <Reference Include="Microsoft.AspNetCore.Components.Authorization">-->
+    <!--        <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\8.0.11\ref\net8.0\Microsoft.AspNetCore.Components.Authorization.dll</HintPath>-->
+    <!--      </Reference>-->
+    <!--    </ItemGroup>-->
+
+    <ItemGroup>
+        <ProjectReference Include="..\Bormech.Client.Liblary\Bormech.Client.Liblary.csproj"/>
+        <ProjectReference Include="..\Bormech.Data\Bormech.Data.csproj"/>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,55 @@
+﻿@using Bormech.Client.Pages.Componets
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+
+
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    <h3>Nie masz dostępu do tej strony. Przekierowanie na stronę logowania...</h3>
+                    <RedirectToLogin/>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(EmptyLayout)">
+                <p class="m-4" role="alert">Przepraszam tu nic nie ma.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+
+
+
+
+@code {
+
+    private RenderFragment RedirectToLogin()
+    {
+        return builder =>
+        {
+            Console.WriteLine("RedirectToLogin");
+            NavManager.NavigateTo("/authentication/login");
+        };
+    }
+
+    bool isAuth;
+
+    protected override async void OnInitialized()
+    {
+        Console.WriteLine("App.razor");
+        var auth = await AuthStateProvider.GetAuthenticationStateAsync();
+        Console.WriteLine(isAuth);
+        isAuth = auth.User.Identity?.IsAuthenticated ?? false;
+        if (auth.User.Identity?.IsAuthenticated ?? false)
+        {
+            Console.WriteLine("IsAuthenticated");
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+}
