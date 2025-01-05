@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
+using Bormech.Data.Entities;
 
-namespace Bormech.Data.Entities;
+namespace BorAdmin.Data.Entities;
 
 public class Relationship
 {

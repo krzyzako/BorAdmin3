@@ -1,4 +1,4 @@
-namespace Bormech.Data.Entities;
+namespace BorAdmin.Data.Entities;
 
 public class UserRole
 {

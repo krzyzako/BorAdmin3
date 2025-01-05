@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
+using BorAdmin.Data.Entities;
+using Bormech.Data.Entities;
 
-namespace Bormech.Data.Entities;
+namespace BorAdmin3.Data.Entities;
 
 public class BaseEntity
 {
