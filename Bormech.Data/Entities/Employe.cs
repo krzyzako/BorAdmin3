@@ -1,5 +1,3 @@
-using BorAdmin.Data.Entities;
-
 namespace Bormech.Data.Entities;
 
 public class Employe
