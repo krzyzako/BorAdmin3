@@ -1,7 +1,7 @@
 using Bormech.Data.DTOs;
 using Bormech.Data.Responses;
 
-namespace Boremch.Server.Liblary.Reporitories.Contracts;
+namespace Bormech.Server.Liblary.Reporitories.Contracts;
 
 public interface IUserAccount
 {

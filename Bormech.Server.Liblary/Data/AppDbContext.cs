@@ -1,7 +1,7 @@
 using Bormech.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Boremch.Server.Liblary.Data;
+namespace Bormech.Server.Liblary.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

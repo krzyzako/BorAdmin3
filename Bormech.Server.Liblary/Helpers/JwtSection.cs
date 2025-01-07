@@ -1,4 +1,4 @@
-namespace Boremch.Server.Liblary.Helpers;
+namespace Bormech.Server.Liblary.Helpers;
 
 public class JwtSection
 {

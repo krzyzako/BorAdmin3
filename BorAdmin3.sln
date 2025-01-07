@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bormech.Client", "Bormech.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bormech.Client.Liblary", "Bormech.Client.Liblary\Bormech.Client.Liblary.csproj", "{8C3C0C38-7464-4ACD-B188-5F1F83AB7C00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boremch.Server.Liblary", "Boremch.Server.Liblary\Boremch.Server.Liblary.csproj", "{C9392E37-AA93-473F-93E3-2227B3F2D1AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bormech.Server.Liblary", "Bormech.Server.Liblary\Bormech.Server.Liblary.csproj", "{C9392E37-AA93-473F-93E3-2227B3F2D1AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bormech.Server", "Bormech.Server\Bormech.Server.csproj", "{09C50AA8-A038-4A67-AB21-56B070EEDFB6}"
 EndProject

@@ -8,6 +8,17 @@
 
     <ItemGroup>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.*"/>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.*"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.*"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.*"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Bormech.Server.Liblary\Bormech.Server.Liblary.csproj" />
+      <ProjectReference Include="..\Bormech.Client\Bormech.Client.csproj" />
+      <ProjectReference Include="..\Bormech.Data\Bormech.Data.csproj" />
     </ItemGroup>
 
 </Project>

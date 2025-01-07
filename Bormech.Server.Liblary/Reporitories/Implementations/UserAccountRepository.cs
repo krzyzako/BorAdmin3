@@ -2,17 +2,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Boremch.Server.Liblary.Data;
-using Boremch.Server.Liblary.Helpers;
-using Boremch.Server.Liblary.Reporitories.Contracts;
 using Bormech.Data.DTOs;
 using Bormech.Data.Entities;
 using Bormech.Data.Responses;
+using Bormech.Server.Liblary.Data;
+using Bormech.Server.Liblary.Helpers;
+using Bormech.Server.Liblary.Reporitories.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Boremch.Server.Liblary.Reporitories.Implementations;
+namespace Bormech.Server.Liblary.Reporitories.Implementations;
 
 public class UserAccountRepository(IOptions<JwtSection> config, AppDbContext appDbContext) : IUserAccount
 {
