@@ -10,6 +10,7 @@ public class AccountBase
     public string? Email { get; set; }
 
     [DataType(DataType.Password)]
-    [Required]
+    [Required(ErrorMessage = "Hasło jest wymagane")]
+    [MinLength(6, ErrorMessage = "Hasło musi mieć co najmniej 6 znaków")]
     public string? Password { get; set; }
 }

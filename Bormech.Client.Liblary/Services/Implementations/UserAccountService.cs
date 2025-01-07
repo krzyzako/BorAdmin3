@@ -37,7 +37,7 @@ public class UserAccountService(GetHttpClient getHttpClient) : IUserAccountServi
     public async Task<WeatherForecast[]?> GetWeatherForecastAsync()
     {
         var httpClient = await getHttpClient.GetPrivateHttpClient();
-        var result = httpClient.GetFromJsonAsync<WeatherForecast[]>("api/weatherforecast");
+        var result = httpClient.GetFromJsonAsync<WeatherForecast[]>("api/WeatherForecast");
         return await result!;
     }
 }

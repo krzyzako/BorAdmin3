@@ -3,6 +3,9 @@ using Bormech.Client.Liblary.Services.Contracts;
 using Bormech.Client;
 using Bormech.Client.Liblary.Services.Implementations;
 using Bormech.Server.Liblary.Data;
+using Bormech.Server.Liblary.Helpers;
+using Bormech.Server.Liblary.Reporitories.Contracts;
+using Bormech.Server.Liblary.Reporitories.Implementations;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
@@ -10,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.Configure<JwtSection>(builder.Configuration.GetSection("JwtSection"));
+builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
 builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.AddMudServices();

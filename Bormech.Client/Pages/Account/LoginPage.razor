@@ -7,15 +7,24 @@
         <MudItem xs="12">
             <MudCard>
                 <MudCardContent>
-                    <MudTextField Label="First name" HelperText="Max. 8 characters"
+                    <MudTextField Label="Adres email" HelperText="Max. 8 characters"
                                   @bind-Value="User.Email" For="@(() => User.Email)"/>
-                    <MudTextField Label="Email" Class="mt-3"
+                    <MudTextField Label="Hasło" Class="mt-3" InputType="InputType.Password"
                                   @bind-Value="User.Password" For="@(() => User.Password)"/>
 
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
-                               Class="ml-auto">Login
+                    <MudButton ButtonType="ButtonType.Submit" Disabled="_processing" Variant="Variant.Filled" Color="Color.Primary"
+                               Class="ml-auto">
+                        @if (_processing)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                            <MudText Class="ms-2">Logowanie</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Zaloguj</MudText>
+                        }
                     </MudButton>
                 </MudCardActions>
             </MudCard>
@@ -23,7 +32,7 @@
 
         <MudItem xs="12">
             <MudText Typo="Typo.body2" Align="Align.Center">
-                Fill out the form correctly to see the success message.
+                Logowanie tylko dla zarejestrowanych użytkowników z emailem w domenie bormech.pl
             </MudText>
         </MudItem>
     </MudGrid>
@@ -32,10 +41,12 @@
 @code {
     readonly Login User = new();
     bool success;
+    private bool _processing = false;
 
     public async Task OnValidSubmit()
     {
         Console.WriteLine("Login");
+        _processing = true;
         var result = await accountService.SingInAsync(User);
         if (result.Flag)
         {
@@ -45,7 +56,9 @@
         }
         else
         {
+            _processing = false;
             success = result.Flag;
+            
         }
 
         StateHasChanged();

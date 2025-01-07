@@ -4,10 +4,25 @@
 <MudThemeProvider/>
 <MudSnackbarProvider/>
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center" Style="height: 100vh;">
+<MudContainer MaxWidth="MaxWidth.Small" Class="d-flex align-center" Style="height: 100vh ">
     <div class="d-flex flex-column mud-width-full">
-        <MudPaper Elevation="25" Class="pa-8" Width="100%" MaxWidth="500px">
-            <MudIcon Icon="@Icons.Material.Sharp.Email" Size="Size.Large" Style="width:100px; height:100px;"/>
+        <MudPaper Elevation="25" Class="pa-8 " Width="100%" MaxWidth="550px">
+   
+                <MudGrid>
+            <MudItem xs="4">
+                <MudPaper Outlined="true" Class="d-flex align-start justify-center mud-width-full py-1 border-0">
+                    <MudImage Src="log.png" Width="120" Height="120" Alt="Mony the dog" Elevation="0" Class="rounded-lg border-0"/>
+                </MudPaper>
+            </MudItem>
+            <MudItem xs="6">
+                <MudPaper Outlined="true" Class="d-flex align-start justify-center mud-width-full px-5 py-0 border-0 mt-15">
+                    <MudText Class="border-0" Typo="Typo.h2">BorAdmin</MudText>
+                </MudPaper>
+            </MudItem>
+                </MudGrid>
+                
+                
+            @* <MudIcon Icon="@Icons.Material.Sharp.Email" Size="Size.Large" Style="width:100px; height:100px;"/> *@
             @Body
         </MudPaper>
         @*<MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;" >No authentication is required, click sign in.</MudAlert>*@
