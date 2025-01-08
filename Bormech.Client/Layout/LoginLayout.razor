@@ -1,5 +1,14 @@
 @inherits LayoutComponentBase
-
+<style scoped>
+    .text-size {
+        font-size: 55px;
+    }
+    @@media (max-width: 600px) {
+    .text-size {
+        font-size: 40px;
+    }
+    }
+</style>
 
 <MudThemeProvider/>
 <MudSnackbarProvider/>
@@ -16,7 +25,7 @@
             </MudItem>
             <MudItem xs="6">
                 <MudPaper Outlined="true" Class="d-flex align-start justify-center mud-width-full px-5 py-0 border-0 mt-15">
-                    <MudText Class="border-0" Typo="Typo.h2">BorAdmin</MudText>
+                    <MudText Class="border-0 text-size" >BorAdmin</MudText>
                 </MudPaper>
             </MudItem>
                 </MudGrid>

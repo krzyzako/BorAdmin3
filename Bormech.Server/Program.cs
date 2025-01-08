@@ -1,4 +1,5 @@
 
+using System.Text;
 using Bormech.Client.Liblary.Services.Contracts;
 using Bormech.Client;
 using Bormech.Client.Liblary.Services.Implementations;
@@ -6,7 +7,9 @@ using Bormech.Server.Liblary.Data;
 using Bormech.Server.Liblary.Helpers;
 using Bormech.Server.Liblary.Reporitories.Contracts;
 using Bormech.Server.Liblary.Reporitories.Implementations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +17,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<JwtSection>(builder.Configuration.GetSection("JwtSection"));
+var jwtSection = builder.Configuration.GetSection("JwtSection").Get<JwtSection>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSection!.Issuer,
+        ValidAudience = jwtSection!.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSection!.Key!))
+    };
+});
+
+
 builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
 builder.Services.AddSwaggerGen();
 // Add services to the container.
@@ -24,7 +47,15 @@ builder.Services.AddRazorComponents();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 // builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 app.UseBlazorFrameworkFiles();
 // app.MapRazorComponents<App>();
@@ -40,12 +71,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
+app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseStatusCodePages();
 app.MapControllers();
-// app.MapBlazorHub();
 app.MapFallbackToFile("index.html");
 app.Run();

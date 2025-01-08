@@ -1,0 +1,9 @@
+.text-size {
+    font-size: 50px;
+}
+
+@media (max-width: 600px) {
+    .text-size {
+        font-size: 16px;
+    }
+}

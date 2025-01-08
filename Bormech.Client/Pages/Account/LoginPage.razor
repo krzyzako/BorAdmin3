@@ -28,6 +28,11 @@
                     </MudButton>
                 </MudCardActions>
             </MudCard>
+            @if (!success)
+            {
+                <MudAlert Severity="Severity.Error" Class="mt-8 mud-width-full" Style="max-width:500px;">Niepoprawne dane logowania</MudAlert>
+            }
+
         </MudItem>
 
         <MudItem xs="12">
@@ -40,9 +45,9 @@
 
 @code {
     readonly Login User = new();
-    bool success;
+    bool success = true;
     private bool _processing = false;
-
+    
     public async Task OnValidSubmit()
     {
         Console.WriteLine("Login");

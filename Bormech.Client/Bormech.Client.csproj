@@ -20,6 +20,9 @@
         <None Update="Layout\EmptyLayout.css">
             <DependentUpon>EmptyLayout.razor</DependentUpon>
         </None>
+        <None Update="Layout\LoginLayout.razor.css">
+          <DependentUpon>LoginLayout.razor</DependentUpon>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
