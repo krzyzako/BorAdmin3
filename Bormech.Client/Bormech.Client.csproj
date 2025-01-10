@@ -11,6 +11,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.7"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.7"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.7" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
         <PackageReference Include="MudBlazor" Version="7.15.0"/>
         <PackageReference Include="MudBlazor.ThemeManager" Version="2.1.0"/>
@@ -38,6 +39,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Bormech.Client.Liblary\Bormech.Client.Liblary.csproj"/>
         <ProjectReference Include="..\Bormech.Data\Bormech.Data.csproj"/>
+        <ProjectReference Include="..\Bormech.Plc\Bormech.Plc.csproj" />
     </ItemGroup>
 
 </Project>

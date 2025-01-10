@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Bormech.Plc\Bormech.Plc.csproj" />
       <ProjectReference Include="..\Bormech.Server.Liblary\Bormech.Server.Liblary.csproj" />
       <ProjectReference Include="..\Bormech.Client\Bormech.Client.csproj" />
       <ProjectReference Include="..\Bormech.Data\Bormech.Data.csproj" />

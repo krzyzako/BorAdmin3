@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MudBlazor.Services;
+using Bormech.Plc;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddSignalR();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<JwtSection>(builder.Configuration.GetSection("JwtSection"));
@@ -41,7 +43,7 @@ builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
 builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.AddMudServices();
-
+builder.Services.AddMyjkaServices(builder.Configuration);
 builder.Services.AddRazorComponents();
 
 builder.Services.AddControllers();
@@ -57,6 +59,10 @@ builder.Services.AddCors(option =>
     });
 });
 var app = builder.Build();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+});
 app.UseBlazorFrameworkFiles();
 // app.MapRazorComponents<App>();
     // .AddInteractiveWebAssemblyRenderMode();
@@ -70,13 +76,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+Console.WriteLine("vr2");
+// app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
 app.UseAntiforgery();
 app.UseStatusCodePages();
+app.MapHub<PlcHub>("/plc");
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 app.Run();

@@ -35,7 +35,15 @@ main {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.text-size {
+    font-size: 55px;
+}
 
+@media (max-width: 600px) {
+    .text-size {
+        font-size: 35px;
+    }
+}
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;

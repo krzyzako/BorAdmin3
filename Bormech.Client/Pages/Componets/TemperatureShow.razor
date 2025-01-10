@@ -1,0 +1,66 @@
+
+<MudGrid  Justify="Justify.Center" Class="mt-5">
+    <MudItem>
+        <MudCard Elevation="4">
+            <MudCardHeader Class="justify-center bg-info">
+                
+                <MudText Typo="Typo.h6" Align="Align.Center">
+                    @Title
+                </MudText>
+            </MudCardHeader>
+        <MudCardContent>
+            <MudGrid>
+                <MudItem>
+                    <MudText Typo="Typo.h2" Align="Align.Center" Color="@TemperatureColor">
+                        @($"{DividedTemperature.ToString("F1")}°C")
+                    </MudText>
+                    <MudProgressLinear Size="Size.Medium" Color="@TemperatureColor" Value="@ProgressValue" Max="100" />
+                </MudItem>
+                <MudItem>
+                    <MudGrid  Class="" Spacing="0" Justify="Justify.Center">
+                        <MudItem xs="12">
+                            <MudIcon Class="justify-center" Icon="@Icons.Material.Filled.Shower" Color="@ColorPump"></MudIcon>
+                            
+                        </MudItem>
+                        <MudItem xs="12">
+                            
+                        <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment"></MudIcon>
+                        </MudItem>
+
+                    </MudGrid>
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+<style scoped>
+    .temperature-container {
+        
+        padding: 15px;
+        max-width: 200px;
+        margin: 20px auto;
+        text-align: center;
+        border-radius: 12px;
+        }
+</style>
+@code {
+    [Parameter] 
+    public int Temperature { get; set; } = 20; // Default temperature
+    [Parameter]
+    public bool WashPump { get; set; } = false;
+    [Parameter]
+    public string Title { get; set; } = "Temperature";
+    
+    private Color ColorPump => WashPump ? Color.Error : Color.Default;
+    private double DividedTemperature => Temperature / 10.0;    
+    private Color TemperatureColor => DividedTemperature switch
+    {
+        <= 0 => Color.Error,         // Cold
+        <= 32 => Color.Warning,     // Cool
+        <= 45 => Color.Success,     // Warm
+        _ => Color.Dark            // Hot
+    };
+
+    private double ProgressValue => (DividedTemperature); // Scale -50 to 50 to 0-100
+}

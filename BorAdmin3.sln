@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bormech.Server.Liblary", "B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bormech.Server", "Bormech.Server\Bormech.Server.csproj", "{09C50AA8-A038-4A67-AB21-56B070EEDFB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bormech.Plc", "Bormech.Plc\Bormech.Plc.csproj", "{C94FF2D0-0CFF-4BD4-A392-8130733B0DFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{09C50AA8-A038-4A67-AB21-56B070EEDFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09C50AA8-A038-4A67-AB21-56B070EEDFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C50AA8-A038-4A67-AB21-56B070EEDFB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C94FF2D0-0CFF-4BD4-A392-8130733B0DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C94FF2D0-0CFF-4BD4-A392-8130733B0DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C94FF2D0-0CFF-4BD4-A392-8130733B0DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C94FF2D0-0CFF-4BD4-A392-8130733B0DFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

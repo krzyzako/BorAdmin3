@@ -6,6 +6,7 @@ using Bormech.Client.Liblary.Services.Implementations;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 using MudBlazor.Services;
 
@@ -31,6 +32,9 @@ builder.Services.AddTransient<CustomHttpHandler>();
 builder.Services.AddHttpClient("BormechApi", client =>
     client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)).AddHttpMessageHandler<CustomHttpHandler>();
 // builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddSingleton(sp => new HubConnectionBuilder()
+    .WithUrl(builder.HostEnvironment.BaseAddress + "/plc") // Ścieżka musi być zgodna z backendem
+    .Build());
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<GetHttpClient>();

@@ -1,19 +1,78 @@
 ﻿@page "/"
+@using Bormech.Client.Pages.Componets.Dialogs
+@using Bormech.Plc
+@using Microsoft.AspNetCore.SignalR.Client
+@using Bormech.Client.Pages.Componets
 @inject ISnackbar Snackbar
-<PageTitle>Home</PageTitle>
+@inject IDialogService DialogService
+@inject HubConnection HubConnection
 
-<AuthorizeView Roles="Admin">
-    <Authorized>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => Snackbar.Add("Simple Snackbar"))">
-            Open Snackbar
-        </MudButton>
-    </Authorized>
-</AuthorizeView>
-<h1>Witaj świecie</h1>
+<PageTitle>Panel główny</PageTitle>
+<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
+    @if (_test)
+    {
+        <MudCard Elevation="4">
+            <MudCardHeader Class="justify-center bg-primary">
+                <MudText Align="Align.Center" Typo="Typo.h5">Myjka Charnowo</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid Class="justify-center">
+                    <MudItem xs="12" sm="6" md="6" >
+                        <TemperatureShow Temperature="@Message.Wanna1Temperature" Title="Temperatura wanny 1"/>
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="6">
+                        <TemperatureShow Temperature="@Message.Wanna2Temperature" Title="Temperatura wanny 2"/>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+        <MudButton OnClick="SendObjectAsync">xzxzxx</MudButton>
+    }
+    else
+    {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true"/>
+    }
 
-Witam w aplikacji Bormech!
-@code
+</MudContainer>
+<Thermostat CurrentTemperature="@Message.Wanna1Temperature" TargetTemperature="Message.Status.Operation.Wanna1.TempSet" />
+@code{
+    private string UserName { get; set; }
+    private OutGoPlc Message { get; set; } = new();
+    private List<string> messages = new();
+    private HubConnection? _hubConnection;
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri("/plc"))
+            .Build();
 
-{
+        _hubConnection.On<OutGoPlc>("PlcScheduleChanged", (user) =>
+        {
+            var newMessage = $"{user.Wanna1Temperature}°C";
+            if (user != null)
+            {
+                Message = user;
+            messages.Add(newMessage);
+            InvokeAsync(StateHasChanged);
+                
+            }
+        });
 
+        await _hubConnection.StartAsync();
+    }
+    
+    private bool _test => Message.Wanna1Temperature is not 0; 
+    
+    public async Task SendObjectAsync()
+    {
+        var obj = "Hello from the client!";
+        if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
+        {
+           var result = await _hubConnection.InvokeAsync<string>("SendObjectToHub", obj);
+           if (result == "ok")
+           {
+               Snackbar.Add("The reactor is running at optimum temperature", Severity.Success);
+           }
+        }
+    }
 }

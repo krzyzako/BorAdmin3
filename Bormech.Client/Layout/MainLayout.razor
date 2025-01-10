@@ -1,5 +1,7 @@
 ﻿@using Bormech.Client.Pages.Componets
+
 @inherits LayoutComponentBase
+
 
 <MudThemeProvider/>
 <MudPopoverProvider/>
@@ -10,23 +12,38 @@
 
     <Authorized>
         <MudLayout>
-            <MudAppBar>
+            <MudAppBar Elevation="1">
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
                                OnClick="@(e => DrawerToggle())"/>
-                My Application
-
-                <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End"/>
-                <MudText Typo="Typo.button">Hello, @context.User.Identity!.Name</MudText>
-                <MudButton @onclick="LogoutClicked" Color="Color.Inherit">Wyloguj</MudButton>
-                <MudButton Color="Color.Inherit">Register</MudButton>
+                <MudText  Typo="Typo.h6">
+                    
+                Bormech Admin v0.1
+                </MudText>
+                <MudSpacer/> 
+                <MudMenu FullWidth="true">
+                    <ActivatorContent>
+                        <MudChip T="string" Size="Size.Large" Icon="@Icons.Material.Filled.Person" Color="Color.Primary">
+                            <MudText Typo="Typo.h5">
+                                
+                            @context.User.Identity!.Name
+                            </MudText>
+                        </MudChip>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem>Profil</MudMenuItem>
+                        <MudMenuItem OnClick="LogoutClicked">Wyloguj</MudMenuItem>
+                    </ChildContent>
+                </MudMenu>                
+         
             </MudAppBar>
 
 
-            <MudDrawer @bind-Open="@_drawerOpen">
+            <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
                 <NavMenu/>
             </MudDrawer>
       
-            <MudMainContent>
+            <MudMainContent >
+                
                 @Body
             </MudMainContent>
         </MudLayout>
@@ -51,5 +68,6 @@
         await customAuthStateProvider.UpdateAuthenticationState(logoutModel);
         NavManager.NavigateTo("/", true);
     }
+
 
 }

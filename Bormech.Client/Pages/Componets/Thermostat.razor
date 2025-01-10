@@ -1,0 +1,42 @@
+<MudCard Elevation="4" Class="pa-4 d-flex flex-column align-center justify-center">
+    <MudText Typo="Typo.h5">Thermostat Control</MudText>
+    <MudText Typo="Typo.subtitle1">Current Temperature: @CurrentTemperature °C</MudText>
+
+    <MudSlider @bind-Value="TargetTemperature"
+               Min="15"
+               Max="30"
+               Step="0.5"
+               ValueLabel="true"
+               ValueLabelFormat="0.0 °C"
+               Color="Color.Primary"
+               Style="width: 300px; margin-top: 16px;" />
+
+    <MudText Typo="Typo.subtitle1">Target Temperature: @TargetTemperature °C</MudText>
+
+    <div class="mt-4 d-flex flex-row align-center justify-around">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="DecreaseTemperature">-</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="IncreaseTemperature">+</MudButton>
+    </div>
+</MudCard>
+
+@code {
+    [Parameter]
+    public double CurrentTemperature { get; set; }
+    [Parameter]
+    public double TargetTemperature { get; set; }  // Docelowa temperatura
+
+    private void IncreaseTemperature()
+    {
+        TargetTemperature = Math.Min(TargetTemperature + 0.5, 30); // Maksymalna wartość to 30
+    }
+
+    private void DecreaseTemperature()
+    {
+        TargetTemperature = Math.Max(TargetTemperature - 0.5, 15); // Minimalna wartość to 15
+    }
+
+    private async Task waiTask()
+    {
+        await Task.Delay(1000);
+    }
+}
