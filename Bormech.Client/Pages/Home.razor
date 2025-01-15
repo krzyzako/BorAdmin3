@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using Bormech.Client.Pages.Componets
 @using Bormech.Client.Pages.Helpers
+
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IConfiguration Configuration
@@ -14,16 +15,8 @@
 
 <PageTitle>Panel główny - Bormech</PageTitle>
 
-<MudPaper Class="pa-5 mb-0" Elevation="6">
-    <MudStack Row="true">
-        <MudAvatar Size="Size.Large">
-            <MudImage Src="log.png" />
-        </MudAvatar>
-        <MudStack Justify="Justify.Center" Spacing="0">
-            <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4" >Dashboard</MudText>
-        </MudStack>
-    </MudStack>
-</MudPaper>
+<TemplateHeader Title="Panel główny" Img="log.png"/>
+
 <MudGrid Justify="Justify.Center" Class="pt-5">
     <MudItem xs="12" sm="12" md="6" lg="4">
         <TemperatureShow Temperature="@OutFromPlcSetings.Wanna1Temperature" Title="Wanna 1"/>

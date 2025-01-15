@@ -1,0 +1,32 @@
+
+<MudPaper Class="pa-5 mb-5" Elevation="6">
+    <MudStack Row="true">
+        <MudAvatar Size="Size.Large">
+            @if (Img != null)
+            {
+                <MudImage Src="@Img"/>
+            }
+            else
+            {
+                <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large"/>
+            }
+        </MudAvatar>
+        <MudStack Justify="Justify.Center" Spacing="0">
+            @if (Title != null)
+            {
+                <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">@Title</MudText>
+            }
+            else
+            {
+            <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Dashboard</MudText>
+            }
+        </MudStack>
+    </MudStack>
+</MudPaper>
+@code {
+    [Parameter]
+    public string? Img { get; set; }
+    [Parameter]
+    public string? Title { get; set; }
+
+}

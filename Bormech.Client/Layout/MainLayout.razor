@@ -1,5 +1,5 @@
 ﻿@using Bormech.Client.Pages.Componets
-
+@inject ILogger<MainLayout> Logger
 @inherits LayoutComponentBase
 
 
@@ -39,7 +39,7 @@
                         </MudChip>
                     </ActivatorContent>
                     <ChildContent>
-                        <MudMenuItem>Profil</MudMenuItem>
+                        <MudMenuItem Href="/profile">Profil</MudMenuItem>
                         <MudMenuItem OnClick="LogoutClicked">Wyloguj</MudMenuItem>
                     </ChildContent>
                 </MudMenu>
@@ -106,6 +106,7 @@
         var logoutModel = new UserSession();
         var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(logoutModel);
+        Logger.LogDebug("Wylogowano");
         NavManager.NavigateTo("/", true);
     }
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>

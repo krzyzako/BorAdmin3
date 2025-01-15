@@ -13,13 +13,16 @@ public class CustomAuthenticationStateProvider(LocalStorageService localStorageS
     {
         var stringToken = await localStorageService.GetToken();
         if (string.IsNullOrEmpty(stringToken)) return await Task.FromResult(new AuthenticationState(_anonymous));
-
+        Console.WriteLine("String token: " + stringToken);
+        
         var deserializeToken = Serializations.DeserializeObj<UserSession>(stringToken);
         if (deserializeToken == null) return await Task.FromResult(new AuthenticationState(_anonymous));
-
+        Console.WriteLine("Deserialize token: " + Serializations.SerializeObj(deserializeToken));
+        
         var getUserClaims = DecryptToken(deserializeToken.Token!);
         if (getUserClaims == null) return await Task.FromResult(new AuthenticationState(_anonymous));
-
+        Console.WriteLine("GetUserClaims: " + Serializations.SerializeObj(getUserClaims));
+        
         var claimsPrincipal = SetClaimsPrincipal(getUserClaims);
         return await Task.FromResult(new AuthenticationState(claimsPrincipal));
     }
