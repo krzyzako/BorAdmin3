@@ -1,0 +1,49 @@
+@using Bormech.Plc
+@inject SignalRManagerService SignalRManagerService
+@if (_time != null)
+{
+    <MudTimePicker PickerVariant="PickerVariant.Dialog" @ref="_picker" Label="@Label" @bind-Time="_time" AutoClose="false">
+        <PickerActions>
+            <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.ClearAsync())">Clear</MudButton>
+            <MudButton OnClick="@(() => _picker.CloseAsync(false))">Cancel</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@(() => SaveTime())">Ok</MudButton>
+        </PickerActions>
+    </MudTimePicker>
+
+}
+@code {  
+    [Parameter] public string? Label { get; set; }
+    private TimeSpan? _time ;
+    private MudTimePicker _picker;
+    
+    [Parameter]
+    public ReadWordObject ReadWordObject { get; set; }  
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(2000);
+        _time =  await SignalRManagerService.InvokeAsync<TimeSpan>("Plc", "GetTimeScheluder", ReadWordObject);
+        
+        Console.WriteLine(_time!.Value.Hours);
+    }
+
+    private async Task SaveTime()
+    {
+        await _picker.CloseAsync();
+        await Task.Delay(1000); 
+        if (_time != null)
+        {
+            await Task.Delay(1000); 
+            var stamp = _time.Value; 
+            var hours = stamp.Hours;
+            var minutes = stamp.Minutes;
+            var time = new TimeSpan( hours, minutes, 0);
+            SavedTime czaSavedTime = new SavedTime(ReadWordObject, time);
+            await SignalRManagerService.InvokeAsync<SavedTime>("Plc", "SaveTimeScheluder", czaSavedTime);
+        }
+
+
+        
+    } 
+
+}

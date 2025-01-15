@@ -1,39 +1,27 @@
 
-<MudGrid  Justify="Justify.Center" Class="mt-5">
-    <MudItem>
-        <MudCard Elevation="4">
-            <MudCardHeader Class="justify-center bg-info">
-                
-                <MudText Typo="Typo.h6" Align="Align.Center">
-                    @Title
-                </MudText>
-            </MudCardHeader>
-        <MudCardContent>
-            <MudGrid>
-                <MudItem>
-                    <MudText Typo="Typo.h2" Align="Align.Center" Color="@TemperatureColor">
-                        @($"{DividedTemperature.ToString("F1")}°C")
-                    </MudText>
-                    <MudProgressLinear Size="Size.Medium" Color="@TemperatureColor" Value="@ProgressValue" Max="100" />
-                </MudItem>
-                <MudItem>
-                    <MudGrid  Class="" Spacing="0" Justify="Justify.Center">
-                        <MudItem xs="12">
-                            <MudIcon Class="justify-center" Icon="@Icons.Material.Filled.Shower" Color="@ColorPump"></MudIcon>
-                            
-                        </MudItem>
-                        <MudItem xs="12">
-                            
-                        <MudIcon Icon="@Icons.Material.Filled.LocalFireDepartment"></MudIcon>
-                        </MudItem>
 
-                    </MudGrid>
-                </MudItem>
-            </MudGrid>
-        </MudCardContent>
-        </MudCard>
-    </MudItem>
-</MudGrid>
+<MudPaper  Elevation="25" Class="d-flex align-baseline flex-grow-1 flex-column pt-6 pb-4" Style="height:100px;">
+    <MudGrid>
+        <MudItem xs="8" Class="d-flex flex-row pt-6 pb-4">
+            <MudIcon Icon="@Icons.Material.Filled.DeviceThermostat" Color="TemperatureColor" Class="mx-4" Style="width:54px; height:54px;"></MudIcon>
+            <div>
+                <MudText Typo="Typo.subtitle1" Class="mud-text-secondary mb-n1">@Title</MudText>
+                <MudText Typo="Typo.h5">@DividedTemperature.ToString("F1")</MudText>
+            </div>
+        </MudItem>
+        <MudPaper Class="d-flex flex-row flex-grow-1 align-center justify-end mr-4"  Width="90px" Elevation="0">
+        <MudPaper Class="d-flex flex-column flex-grow-0 gap-0" Elevation="0" >
+            <MudIcon  Icon="@Icons.Material.Filled.WaterDrop" Color="ColorPump" Class="mt-4 justify-center"></MudIcon>
+            <MudIcon Icon="@Icons.Material.Filled.DeviceThermostat" Color="TemperatureColor" Class="mt-4 justify-center"></MudIcon>
+        </MudPaper>
+            
+        </MudPaper>
+
+    </MudGrid>
+</MudPaper>
+
+
+
 <style scoped>
     .temperature-container {
         
@@ -45,6 +33,9 @@
         }
 </style>
 @code {
+    [Parameter] 
+    public string Icon { get; set; } = Icons.Material.Filled.DeviceThermostat;
+    
     [Parameter] 
     public int Temperature { get; set; } = 20; // Default temperature
     [Parameter]

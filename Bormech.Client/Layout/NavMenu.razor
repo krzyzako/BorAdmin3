@@ -1,4 +1,18 @@
-﻿<MudNavMenu>
+﻿
+<MudNavMenu>
+    <MudCard Elevation="0" Square="true" >
+        <MudCardHeader>
+            <CardHeaderAvatar>
+                <MudAvatar Color="Color.Info">
+                    <MudIcon Icon="@Icons.Material.Filled.AccountCircle"/>
+                </MudAvatar>
+            </CardHeaderAvatar>
+            <CardHeaderContent>
+                <MudText Typo="Typo.caption"> Witaj </MudText>
+                <MudText Typo="Typo.body2"> @Authentication?.User.Identity!.Name </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+    </MudCard>
     <MudNavLink Href="/" Match="NavLinkMatch.All">Myjka</MudNavLink>
     <MudNavLink Href="/weather" Match="NavLinkMatch.Prefix">Pogoda</MudNavLink>
     <MudNavGroup Title="Settings" Expanded="true">
@@ -6,6 +20,13 @@
         <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
     </MudNavGroup>
     <AuthorizeView Roles="Admin">
-    <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
+        <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink>
     </AuthorizeView>
 </MudNavMenu>
+
+@code{
+
+    [CascadingParameter(Name = "Authentication")] 
+    public AuthenticationState? Authentication { get; set; }
+
+}

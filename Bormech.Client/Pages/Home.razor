@@ -1,78 +1,98 @@
 ﻿@page "/"
-@using Bormech.Client.Pages.Componets.Dialogs
+@using AutoMapper
 @using Bormech.Plc
 @using Microsoft.AspNetCore.SignalR.Client
 @using Bormech.Client.Pages.Componets
+@using Bormech.Client.Pages.Helpers
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
-@inject HubConnection HubConnection
+@inject IConfiguration Configuration
+@inject AppConfig AppConfig
+@inject SignalRManagerService SignalRManagerService
+@inject HubManager HubManager
+@implements IDisposable
 
-<PageTitle>Panel główny</PageTitle>
-<MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.False">
-    @if (_test)
-    {
-        <MudCard Elevation="4">
-            <MudCardHeader Class="justify-center bg-primary">
-                <MudText Align="Align.Center" Typo="Typo.h5">Myjka Charnowo</MudText>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudGrid Class="justify-center">
-                    <MudItem xs="12" sm="6" md="6" >
-                        <TemperatureShow Temperature="@Message.Wanna1Temperature" Title="Temperatura wanny 1"/>
-                    </MudItem>
-                    <MudItem xs="12" sm="6" md="6">
-                        <TemperatureShow Temperature="@Message.Wanna2Temperature" Title="Temperatura wanny 2"/>
-                    </MudItem>
-                </MudGrid>
-            </MudCardContent>
-        </MudCard>
-        <MudButton OnClick="SendObjectAsync">xzxzxx</MudButton>
-    }
-    else
-    {
-        <MudProgressCircular Color="Color.Default" Indeterminate="true"/>
-    }
+<PageTitle>Panel główny - Bormech</PageTitle>
 
-</MudContainer>
-<Thermostat CurrentTemperature="@Message.Wanna1Temperature" TargetTemperature="Message.Status.Operation.Wanna1.TempSet" />
+<MudPaper Class="pa-5 mb-0" Elevation="6">
+    <MudStack Row="true">
+        <MudAvatar Size="Size.Large">
+            <MudImage Src="log.png" />
+        </MudAvatar>
+        <MudStack Justify="Justify.Center" Spacing="0">
+            <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4" >Dashboard</MudText>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+<MudGrid Justify="Justify.Center" Class="pt-5">
+    <MudItem xs="12" sm="12" md="6" lg="4">
+        <TemperatureShow Temperature="@OutFromPlcSetings.Wanna1Temperature" Title="Wanna 1"/>
+    </MudItem>
+    <MudItem xs="12" sm="12" md="6" lg="4">
+        <TemperatureShow Temperature="@OutFromPlcSetings.Wanna2Temperature" Title="Wanna 2"/>
+    </MudItem>
+    <WeeklySchedule/>
+</MudGrid>
+
+
+@* <Thermostat CurrentTemperature="@OutFromPlcSetings.Wanna1Temperature" TargetTemperature="OutFromPlcSetings.Status.Operation.Wanna1.TempSet" /> *@
 @code{
+
+
+    private static string _nameHub = "Plc";
     private string UserName { get; set; }
-    private OutGoPlc Message { get; set; } = new();
+    private string Name => GetType().Name;
+    public OutGoPlc OutFromPlcSetings { get; set; } = new();
+    public PlcSchedule? PlcSchedule { get; set; } = null;
     private List<string> messages = new();
-    private HubConnection? _hubConnection;
+    private List<Hub> _hubs;
+
     protected override async Task OnInitializedAsync()
     {
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavManager.ToAbsoluteUri("/plc"))
-            .Build();
-
-        _hubConnection.On<OutGoPlc>("PlcScheduleChanged", (user) =>
+        _hubs = await HubManager.InitializeHubs(GetType().Name);
+        HubManager.On<OutGoPlc>(_nameHub, "PlcScheduleChanged", message =>
         {
-            var newMessage = $"{user.Wanna1Temperature}°C";
-            if (user != null)
-            {
-                Message = user;
-            messages.Add(newMessage);
+            OutFromPlcSetings = message;
             InvokeAsync(StateHasChanged);
-                
-            }
         });
+        await WaitForConnectionAsync();
+        await Task.Delay(2000);
+        if (PlcSchedule == null)
+        {
+            // PlcSchedule = await SignalRManagerService.InvokeAsync<PlcSchedule>(_nameHub, "SendObjectToHub",  "ooo");
+        }
+        // await InvokeAsync(StateHasChanged);
 
-        await _hubConnection.StartAsync();
+
     }
     
-    private bool _test => Message.Wanna1Temperature is not 0; 
-    
-    public async Task SendObjectAsync()
+    private bool Test => OutFromPlcSetings.Wanna1Temperature is not 0;
+  
+
+
+    private async Task WaitForConnectionAsync()
     {
-        var obj = "Hello from the client!";
-        if (_hubConnection != null && _hubConnection.State == HubConnectionState.Connected)
+
+        while (SignalRManagerService.GetHubConnectionState(_nameHub)  != HubConnectionState.Connected)
         {
-           var result = await _hubConnection.InvokeAsync<string>("SendObjectToHub", obj);
-           if (result == "ok")
-           {
-               Snackbar.Add("The reactor is running at optimum temperature", Severity.Success);
-           }
+            await Task.Delay(100); // Krótkie opóźnienie do czasu nawiązania połączenia
+            Console.WriteLine("czekam");
         }
     }
+
+    public async Task OnClick()
+    {
+        PlcSchedule = await SignalRManagerService.InvokeAsync<PlcSchedule>(_nameHub, "SendObjectToHub", "oo");
+        await InvokeAsync(StateHasChanged);
+    }
+    public async void Dispose()
+    {
+        await SignalRManagerService.StopHubAsync(_nameHub);
+    }
+    
+
+
+
+
+
 }

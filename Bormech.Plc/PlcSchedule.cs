@@ -32,7 +32,7 @@ public class PlcSchedule
         Sunday = false;
     }
 
-    public PlcSchedule(List<Schedule.DaySchedule> schedule)
+    public PlcSchedule(List<IPlcShedule> schedule)
     {
         Monday = schedule[0].IsActive;
         Tuesday = schedule[1].IsActive;
@@ -41,6 +41,11 @@ public class PlcSchedule
         Friday = schedule[4].IsActive;
         Saturday = schedule[5].IsActive;
         Sunday = schedule[6].IsActive;
+    }
+    public interface IPlcShedule
+    {
+        public string Day { get; set; }
+        public bool IsActive { get; set; }
     }
     
 }

@@ -1,0 +1,158 @@
+@using System.Reflection
+@using Bormech.Plc
+@inject SignalRManagerService SignalRManagerService
+@inject ISnackbar Snackbar
+ <MudItem xs="12" sm="12" md="12" lg="4">
+        <MudCard Elevation="25" Style="height:100%;">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Harmonogram</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent Class="px-0">
+                <MudList T="MudPlcSchedule" @bind-SelectedValues="MudPlcSchedules" SelectionMode="SelectionMode.ToggleSelection">
+                    @foreach (var schedule in MudPlcSchedules)
+                    {
+                        <MudListItem Text="@schedule.Day" Value="schedule.IsActive" OnClick='() => { Snackbar.Add( (schedule.IsActive ? "Wyłączone" : "Włączone").ToString() + " " + schedule.Day); schedule.IsActive = !schedule.IsActive;}'>
+                        <div class="d-flex flex-row">
+                            <MudAvatar Class="mud-elevation-25" Color="schedule.IsActive ? Color.Info : Color.Default">
+                                <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.LocalFireDepartment" Class="mx-4" Color="schedule.IsActive ? Color.Error : Color.Default"/>
+                            </MudAvatar>
+                            <div class="ml-6">
+                                <MudText Typo="Typo.subtitle2">@schedule.Day</MudText>
+                                @if (schedule.IsActive)
+                                {
+                                    <MudText Typo="Typo.body2">Fire in reactor core</MudText>
+                                    
+                                }
+                            </div>
+                            @if (schedule.IsActive)
+                            {
+                            <MudChip Label="true" Color="Color.Error" Size="Size.Small" Class="ml-auto mud-elevation-25">Włączone</MudChip>
+                            }
+                            else
+                            {
+                                <MudChip Label="true" Color="Color.Success" Size="Size.Small" Class="ml-auto mud-elevation-25">Wyłaćzone</MudChip>
+                            }
+                        </div>
+                    </MudListItem>
+                        
+                    }
+                    <MudItem>
+                            <MudPaper Elevation="0" Class="d-flex flex-row align-center justify-center mb-4">
+                                <MudPaper  Elevation="0" Class="d-flex flex-column align-center justify-center mr-5" Style="width: 130px">
+                                    <TimePickerSignal Label="Czas wlączenia" ReadWordObject="_tStart"/>
+                                </MudPaper>
+                                <MudPaper  Elevation="0" Class="d-flex flex-column align-center justify-center mr-5" Style="width: 130px">
+                                    <TimePickerSignal Label="Czas wyłączenia" ReadWordObject="_tEnd"/>
+                                </MudPaper>
+                            </MudPaper >
+                       
+                    </MudItem>
+                    <MudListItem Class="bg-primary" OnClick="SaveSchelude">
+                        <MudText Align="Align.Center" Color="Color.Error" > ZAPISZ</MudText>
+                        @* <MudChip Label="true" Color="Color.Error" Size="Size.Small" Class="ml-auto mud-elevation-25 justify-content-center">Włączone</MudChip> *@
+                    </MudListItem>  
+                   
+                </MudList>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+@code
+{
+    public PlcSchedule? Test;
+    public IReadOnlyCollection<MudPlcSchedule> MudPlcSchedules = new List<MudPlcSchedule>([
+    
+    ]);
+    private TimeSpan? _time = new TimeSpan(00, 45, 00);
+    private ReadWordObject _tStart = new ReadWordObject(9,44);
+    private ReadWordObject _tEnd = new ReadWordObject(9,46);
+    public static void ConvertDay(IReadOnlyCollection<MudPlcSchedule> oldDayList, PlcSchedule newDay)
+    {
+        // Słownik do mapowania dni tygodnia z polskiego na angielski
+        var dayMap = new Dictionary<string, Action<PlcSchedule,MudPlcSchedule>>
+        {
+            { "Poniedziałek", (day,x) => day.Monday = x.IsActive },
+            { "Wtorek",  (day,x) => day.Tuesday = x.IsActive},
+            { "Środa",  (day,x) => day.Wednesday = x.IsActive},
+            { "Czwartek",  (day,x) => day.Thursday = x.IsActive},
+            { "Piątek",  (day,x) => day.Friday = x.IsActive },
+            { "Sobota",  (day,x) => day.Saturday = x.IsActive}
+            
+        };
+        foreach (var oldDay in oldDayList)
+        {
+            if (oldDay.IsActive && dayMap.ContainsKey(oldDay.Day))
+            {
+                dayMap[oldDay.Day](newDay,oldDay);
+                var str = Serializations.SerializeObj<PlcSchedule>(newDay);
+                Console.WriteLine(str);
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(2000);
+        SignalRManagerService.On<PlcSchedule>("Plc", "SendAfterSaveSchedule", message =>
+        {
+            MudPlcSchedules = MudPlcSchedule.GeneraList(message);
+            Snackbar.Add("Zmiana harmonogramu");
+            var str = Serializations.SerializeObj(MudPlcSchedules);
+            StateHasChanged();
+            Console.WriteLine(str);
+        });
+        var ss = await SignalRManagerService.InvokeAsync<PlcSchedule>("Plc", "SendObjectToHub", "ooo");
+        MudPlcSchedules = MudPlcSchedule.GeneraList(ss);
+        var str = Serializations.SerializeObj(ss);
+        Console.WriteLine(str);
+        await InvokeAsync(StateHasChanged);
+        await base.OnInitializedAsync();
+    }
+    
+    public async Task SaveSchelude()
+    {
+        var toSend = new PlcSchedule();
+        ConvertDay(MudPlcSchedules, toSend);
+        var str = Serializations.SerializeObj(toSend);
+        Console.WriteLine(str);
+        await SignalRManagerService.InvokeAsync<PlcSchedule>("Plc", "SaveSchedule", toSend);
+    }
+    public class MudPlcSchedule : PlcSchedule.IPlcShedule
+    {
+        public string Day { get; set; }
+        public bool IsActive { get; set; }
+
+        public MudPlcSchedule()
+        {
+            Day = "";
+            IsActive = false;
+        }
+        public MudPlcSchedule(string day, bool isActive)
+        {
+            Day = day;
+            IsActive = isActive;
+        }
+
+        public static List<MudPlcSchedule> GeneraList(PlcSchedule schedule)
+        {
+            return
+            [
+                new MudPlcSchedule("Poniedziałek", schedule.Monday),
+                new MudPlcSchedule("Wtorek", schedule.Tuesday),
+                new MudPlcSchedule("Środa", schedule.Wednesday),
+                new MudPlcSchedule("Czwartek", schedule.Thursday),
+                new MudPlcSchedule("Piątek", schedule.Friday),
+                new MudPlcSchedule("Sobota", schedule.Saturday)
+            ];
+        }
+
+        public void GetPlcSchedule(List<MudPlcSchedule> listSchedules)
+        {
+
+        }
+    }
+
+}
+ 
