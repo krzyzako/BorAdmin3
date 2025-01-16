@@ -113,6 +113,21 @@ public class UserAccountRepository(IOptions<JwtSection> config, AppDbContext app
         return new LoginResponse(true, "Token refreshed successfully", jwtToken, refreshToken);
     }
 
+    public async Task<GeneralResonse> ChangePasswordAsync(ChangePassword? changePassword)
+    {
+        if (changePassword is null) return new GeneralResonse(false, "ChangePassword is null");
+        
+        var user = await FindUserByEmail(changePassword.Email!);
+        if (user is null) return new GeneralResonse(false, "User not found");
+        
+        if (!BCrypt.Net.BCrypt.Verify(changePassword.Password, user.Password)) 
+            return new GeneralResonse(false, "Invalid password");
+
+        user.Password = BCrypt.Net.BCrypt.HashPassword(changePassword.NewPassword);
+        await appDbContext.SaveChangesAsync();
+        return new GeneralResonse(true, "Password changed successfully");
+    }
+
     private async Task<UserRole?> FindUserRole(int userId)
     {
         return await appDbContext.UserRoles.FirstOrDefaultAsync(x => x.UserId == userId)!;

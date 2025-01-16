@@ -1,14 +1,9 @@
 ﻿@page "/"
-@using AutoMapper
 @using Bormech.Plc
 @using Microsoft.AspNetCore.SignalR.Client
 @using Bormech.Client.Pages.Componets
 @using Bormech.Client.Pages.Helpers
 
-@inject ISnackbar Snackbar
-@inject IDialogService DialogService
-@inject IConfiguration Configuration
-@inject AppConfig AppConfig
 @inject SignalRManagerService SignalRManagerService
 @inject HubManager HubManager
 @implements IDisposable
@@ -19,25 +14,25 @@
 
 <MudGrid Justify="Justify.Center" Class="pt-5">
     <MudItem xs="12" sm="12" md="6" lg="4">
-        <TemperatureShow Temperature="@OutFromPlcSetings.Wanna1Temperature" Title="Wanna 1"/>
+        <TemperatureShow Temperature="@OutFromPlcSettings.Wanna1Temperature" Title="Wanna 1"/>
     </MudItem>
     <MudItem xs="12" sm="12" md="6" lg="4">
-        <TemperatureShow Temperature="@OutFromPlcSetings.Wanna2Temperature" Title="Wanna 2"/>
+        <TemperatureShow Temperature="@OutFromPlcSettings.Wanna2Temperature" Title="Wanna 2"/>
     </MudItem>
     <WeeklySchedule/>
 </MudGrid>
 
 
-@* <Thermostat CurrentTemperature="@OutFromPlcSetings.Wanna1Temperature" TargetTemperature="OutFromPlcSetings.Status.Operation.Wanna1.TempSet" /> *@
+@* <Thermostat CurrentTemperature="@OutFromPlcSettings.Wanna1Temperature" TargetTemperature="OutFromPlcSettings.Status.Operation.Wanna1.TempSet" /> *@
 @code{
 
 
     private static string _nameHub = "Plc";
-    private string UserName { get; set; }
+    private string? UserName { get; set; }
     private string Name => GetType().Name;
-    public OutGoPlc OutFromPlcSetings { get; set; } = new();
-    public PlcSchedule? PlcSchedule { get; set; } = null;
-    private List<string> messages = new();
+    private OutGoPlc OutFromPlcSettings { get; set; } = new();
+    private PlcSchedule? PlcSchedule { get; set; } = null;
+    private List<string> _messages = new();
     private List<Hub> _hubs;
 
     protected override async Task OnInitializedAsync()
@@ -45,7 +40,7 @@
         _hubs = await HubManager.InitializeHubs(GetType().Name);
         HubManager.On<OutGoPlc>(_nameHub, "PlcScheduleChanged", message =>
         {
-            OutFromPlcSetings = message;
+            OutFromPlcSettings = message;
             InvokeAsync(StateHasChanged);
         });
         await WaitForConnectionAsync();
@@ -59,7 +54,7 @@
 
     }
     
-    private bool Test => OutFromPlcSetings.Wanna1Temperature is not 0;
+    private bool Test => OutFromPlcSettings.Wanna1Temperature is not 0;
   
 
 
