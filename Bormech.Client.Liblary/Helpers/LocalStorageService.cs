@@ -16,6 +16,14 @@ public class LocalStorageService(ILocalStorageService localStorageService)
         await localStorageService.SetItemAsync(StorageKey, item);
     }
 
+    public async Task SetItem(string key, string item)
+    {
+        await localStorageService.SetItemAsync(key, item);
+    }
+    public async Task<string> GetItem(string key)
+    {
+        return await localStorageService.GetItemAsync<string>(key);
+    } 
     public async Task RemoveToken()
     {
         await localStorageService.RemoveItemAsync(StorageKey);

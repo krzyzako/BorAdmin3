@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Bormech.Client.Liblary.Helpers;
 
-public class CustomAuthenticationStateProvider(LocalStorageService localStorageService) : AuthenticationStateProvider
+public class CustomAuthenticationStateProvider(LocalStorageService localStorageService, UserInfoState? userInfoState) : AuthenticationStateProvider
 {
+  
     private readonly ClaimsPrincipal _anonymous = new(new ClaimsIdentity());
+    
+
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -22,7 +25,8 @@ public class CustomAuthenticationStateProvider(LocalStorageService localStorageS
         var getUserClaims = DecryptToken(deserializeToken.Token!);
         if (getUserClaims == null) return await Task.FromResult(new AuthenticationState(_anonymous));
         Console.WriteLine("GetUserClaims: " + Serializations.SerializeObj(getUserClaims));
-        
+        // ReSharper disable once CapturedPrimaryConstructorParameterIsMutable
+        userInfoState?.SetUserInfo(getUserClaims.Id!, getUserClaims.Name!, getUserClaims.Email!, getUserClaims.Role!);
         var claimsPrincipal = SetClaimsPrincipal(getUserClaims);
         return await Task.FromResult(new AuthenticationState(claimsPrincipal));
     }

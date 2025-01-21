@@ -47,6 +47,7 @@ builder.Services.AddSingleton(appConfig);
 
 builder.Services.AddAuthorizationCore();
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddScoped<UserInfoState>();
 builder.Services.AddScoped<SignalRManagerService>();
 builder.Services.AddScoped<GetHttpClient>();
 builder.Services.AddScoped<LocalStorageService>();
