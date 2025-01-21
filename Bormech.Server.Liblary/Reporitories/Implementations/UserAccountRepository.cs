@@ -85,7 +85,7 @@ public class UserAccountRepository(IOptions<JwtSection> config, AppDbContext app
             await AddToDatabase(new RefreshTokenInfo { Token = refreshToken, UserId = applicationUser.Id });
         }
 
-        return new LoginResponse(true, "Login successful", jwtToken, refreshToken);
+        return new LoginResponse(true, "Login successful", jwtToken, refreshToken, applicationUser.Email!);
     }
 
     public async Task<LoginResponse> RefreshTokenAsync(RefreshToken? token)
@@ -126,6 +126,15 @@ public class UserAccountRepository(IOptions<JwtSection> config, AppDbContext app
         user.Password = BCrypt.Net.BCrypt.HashPassword(changePassword.NewPassword);
         await appDbContext.SaveChangesAsync();
         return new GeneralResonse(true, "Password changed successfully");
+    }
+
+    public async Task<GeneralResonse> GetInfoMe(string name)
+    {
+        
+        var user = await FindUserByName(name);
+        if (user is null) return new GeneralResonse(false, "User not found");
+        return new GeneralResonse(true, "User found");
+        
     }
 
     private async Task<UserRole?> FindUserRole(int userId)
@@ -177,4 +186,10 @@ public class UserAccountRepository(IOptions<JwtSection> config, AppDbContext app
         return await appDbContext.ApplicationUsers.FirstOrDefaultAsync(x =>
             x.Email!.ToLower()!.Equals(userEmail!.ToLower()))!;
     }
+
+    private async Task<ApplicationUser?> FindUserByName(string name)
+    {
+        return await appDbContext.ApplicationUsers.FirstOrDefaultAsync(x =>
+            x.FullName!.ToLower()!.Equals(name!.ToLower()))!; 
+    } 
 }

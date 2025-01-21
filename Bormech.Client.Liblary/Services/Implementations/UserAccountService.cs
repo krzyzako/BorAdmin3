@@ -34,6 +34,14 @@ public class UserAccountService(GetHttpClient getHttpClient) : IUserAccountServi
         return await response.Content.ReadFromJsonAsync<LoginResponse>()!;
     }
 
+    public async Task<GeneralResonse?> ChangePasswordAsync(ChangePassword? changePassword)
+    {
+        var httpClient = await getHttpClient.GetPrivateHttpClient();
+        var response = await httpClient.PostAsJsonAsync(AuthUrl + "/change-password", changePassword);
+        if (!response.IsSuccessStatusCode) return new GeneralResonse(false, "Error occured");
+        return await response.Content.ReadFromJsonAsync<GeneralResonse>()!;
+    }
+
     public async Task<WeatherForecast[]?> GetWeatherForecastAsync()
     {
         var httpClient = await getHttpClient.GetPrivateHttpClient();

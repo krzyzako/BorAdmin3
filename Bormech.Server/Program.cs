@@ -3,6 +3,7 @@ using System.Text;
 using Bormech.Client.Liblary.Services.Contracts;
 using Bormech.Client;
 using Bormech.Client.Liblary.Services.Implementations;
+using Bormech.Mqtt;
 using Bormech.Server.Liblary.Data;
 using Bormech.Server.Liblary.Helpers;
 using Bormech.Server.Liblary.Reporitories.Contracts;
@@ -43,6 +44,7 @@ builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
 builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.AddMudServices();
+builder.Services.AddMqttServices(builder.Configuration);
 builder.Services.AddMyjkaServices(builder.Configuration);
 builder.Services.AddRazorComponents();
 

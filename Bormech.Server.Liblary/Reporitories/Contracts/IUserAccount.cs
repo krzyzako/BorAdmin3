@@ -8,6 +8,7 @@ public interface IUserAccount
     Task<GeneralResonse> CreateAsync(Register? user);
     Task<LoginResponse> SingInAsync(Login user);
     Task<LoginResponse> RefreshTokenAsync(RefreshToken token);
+    Task<GeneralResonse> GetInfoMe(string name);
     Task<GeneralResonse> ChangePasswordAsync(ChangePassword changePassword);
 }
 

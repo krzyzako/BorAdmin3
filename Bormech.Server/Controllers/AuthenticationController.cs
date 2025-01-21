@@ -15,6 +15,7 @@ namespace Bormech.Server.Controllers
             var result = await accountInterface.CreateAsync(user);
             return Ok(result);
         }
+
         /// <summary>
         /// Logs in a user, returning a new access token
         /// </summary>
@@ -27,6 +28,7 @@ namespace Bormech.Server.Controllers
             var result = await accountInterface.SingInAsync(user);
             return Ok(result);
         }
+
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshTokenAsync(RefreshToken? token)
         {
@@ -34,6 +36,7 @@ namespace Bormech.Server.Controllers
             var result = await accountInterface.RefreshTokenAsync(token);
             return Ok(result);
         }
+
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePasswordAsync(ChangePassword? changePassword)
         {
@@ -41,5 +44,7 @@ namespace Bormech.Server.Controllers
             var result = await accountInterface.ChangePasswordAsync(changePassword);
             return Ok(result);
         }
+
+
     }
 }

@@ -8,5 +8,6 @@ public interface IUserAccountService
     Task<GeneralResonse?> CreateAsync(Register user);
     Task<LoginResponse?> SingInAsync(Login user);
     Task<LoginResponse?> RefreshTokenAsync(RefreshToken token);
+    Task<GeneralResonse?> ChangePasswordAsync(ChangePassword? changePassword);
     Task<WeatherForecast[]?> GetWeatherForecastAsync();
 }

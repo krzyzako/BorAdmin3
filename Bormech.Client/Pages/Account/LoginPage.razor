@@ -56,7 +56,7 @@
         if (result.Flag)
         {
             var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
-            await customAuthStateProvider.UpdateAuthenticationState(new UserSession { Token = result.Token, RefreshToken = result.RefreshToken });
+            await customAuthStateProvider.UpdateAuthenticationState(new UserSession { Token = result.Token, RefreshToken = result.RefreshToken, Email = User.Email });
             NavManager.NavigateTo("/", true);
         }
         else
