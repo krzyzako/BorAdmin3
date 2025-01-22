@@ -17,7 +17,7 @@ public class PlcService
     // Definicja delegata dla eventu
     private readonly ILogger<PlcService> _logger;
 
-    public delegate void PlcDataChangedEventHandler(OutGoPlc plcData);
+    public delegate Task PlcDataChangedEventHandler(OutGoPlc plcData);
 
     private readonly IHubContext<PlcHub> _hubContext;
 
@@ -38,7 +38,7 @@ public class PlcService
         StartTimer();
     }
 
-    public Task StartTimer()
+    private Task StartTimer()
     {
         _timer = new System.Timers.Timer(1000);
         _timer.Elapsed += async (sender, e) => { await ReadDataAsync(); };
@@ -47,7 +47,7 @@ public class PlcService
         return Task.CompletedTask;
     }
 
-    public async Task ConnectAsync()
+    private async Task ConnectAsync()
     {
         if (_plc == null)
         {
@@ -61,7 +61,7 @@ public class PlcService
         }
     }
 
-    public async Task<OutGoPlc?> ReadDataAsync()
+    private async Task<OutGoPlc?> ReadDataAsync()
     {
         try
         {
@@ -81,6 +81,7 @@ public class PlcService
             // {
             //     _logger.LogWarning("PlcData is null");
             // }
+            OnOnPlcDataChanged(PlcData);    
             return PlcData;
         }
         catch (Exception ex)
@@ -178,4 +179,9 @@ protected virtual void OnDataChanged(OutGoPlc obj)
         {
             DataChanged?.Invoke(obj);
         }
-    }
+
+protected virtual async Task OnOnPlcDataChanged(OutGoPlc plcData)
+        {
+            await OnPlcDataChanged?.Invoke(plcData)!;
+        }
+}

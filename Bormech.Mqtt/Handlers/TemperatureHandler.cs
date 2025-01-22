@@ -3,9 +3,8 @@ using Bormech.Server.Liblary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MQTTnet;
 
-namespace Bormech.Mqtt;
+namespace Bormech.Mqtt.Handlers;
 
 public class TemperatureHandler(MqttService mqtt, ILogger<TemperatureHandler> logger, IServiceScopeFactory serviceScopeFactory) : ITopicHandler
 {

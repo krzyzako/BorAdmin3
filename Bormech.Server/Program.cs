@@ -44,8 +44,8 @@ builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
 builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.AddMudServices();
-builder.Services.AddMqttServices(builder.Configuration);
 builder.Services.AddMyjkaServices(builder.Configuration);
+builder.Services.AddMqttServices(builder.Configuration);
 builder.Services.AddRazorComponents();
 
 builder.Services.AddControllers();

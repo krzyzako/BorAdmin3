@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using Bormech.Plc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
@@ -8,6 +10,7 @@ namespace Bormech.Mqtt;
 
 public sealed class MqttService : BackgroundService
 {
+    private readonly PlcService _plcService; 
     private readonly ILogger<MqttService> logger;
     private IMqttClient _mqttClient;
     private MqttClientOptions _mqttOptions;
@@ -19,8 +22,9 @@ public sealed class MqttService : BackgroundService
         await MyEvent?.Invoke(message)!;
     }
     
-    public MqttService(ILogger<MqttService> logger)
+    public MqttService(ILogger<MqttService> logger, PlcService plcService)
     {
+        _plcService = plcService;
         this.logger = logger;
         var mqttFactory = new MqttClientFactory();
         _mqttClient = mqttFactory.CreateMqttClient();
@@ -31,8 +35,17 @@ public sealed class MqttService : BackgroundService
             .Build();
 
         ConfigureMqttClient();
+        _plcService.OnPlcDataChanged += OnPlcDataChanged;
     }
-    
+
+    private async Task OnPlcDataChanged(OutGoPlc plcData)
+    {
+        Console.WriteLine("OnPlcDataChanged");
+        var json = JsonSerializer.Serialize(plcData);
+        await _mqttClient.PublishAsync(new MqttApplicationMessageBuilder().WithTopic("bell/schedule").WithPayload(json).Build());
+        
+    }
+
     private void ConfigureMqttClient()
     {
         _mqttClient.ConnectedAsync += async e =>
