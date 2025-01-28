@@ -81,7 +81,7 @@ public class PlcService
             // {
             //     _logger.LogWarning("PlcData is null");
             // }
-            OnOnPlcDataChanged(PlcData);    
+            await OnOnPlcDataChanged(PlcData);    
             return PlcData;
         }
         catch (Exception ex)

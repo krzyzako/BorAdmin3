@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MudBlazor.Services;
 using Bormech.Plc;
+using Bormech.Server.Filters;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,7 +42,10 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddScoped<IUserAccount, UserAccountRepository>();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SchemaFilter<RegexSchemaFilter>();
+});
 // Add services to the container.
 builder.Services.AddMudServices();
 builder.Services.AddMyjkaServices(builder.Configuration);
